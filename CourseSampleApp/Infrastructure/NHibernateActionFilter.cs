@@ -25,6 +25,7 @@ namespace CourseSampleApp.Infrastructure
 				return;
 
 			sessionController.Session = sessionFactory.OpenSession();
+			sessionController.Session.BeginTransaction();
 		}
 
 		public override void OnActionExecuted(ActionExecutedContext filterContext)
@@ -37,6 +38,10 @@ namespace CourseSampleApp.Infrastructure
 			var session = sessionController.Session;
 			if (session != null)
 			{
+				if(filterContext.Exception != null)
+					session.Transaction.Rollback();
+				else
+					session.Transaction.Commit();
 				session.Dispose();
 			}
 		}
