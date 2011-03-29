@@ -1,0 +1,4 @@
+2011-03-29 14:07:25,815 [1] INFO  Rhino.Licensing.LicenseValidator [(null)] - License expiration date is 03/29/2011 20:35:05
+2011-03-29 14:07:33,587 [1] INFO  Rhino.Licensing.LicenseValidator [(null)] - License expiration date is 04/29/2011 20:35:10
+2011-03-29 14:07:33,686 [1] DEBUG Rhino.Licensing.LicenseValidator [(null)] - License accepted for NHibernate Profiler
+2011-03-29 14:12:33,603 [12] INFO  Rhino.Licensing.LicenseValidator [(null)] - License expiration date is 04/29/2011 20:35:10
