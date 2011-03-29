@@ -14,7 +14,29 @@ namespace CourseSampleApp
 
 	public class MvcApplication : System.Web.HttpApplication
 	{
-		private static ISessionFactory sessionFactory = BuildSessionFactory();
+		private static readonly ISessionFactory sessionFactory = BuildSessionFactory();
+
+		public static ISession CurrentSession
+		{
+			get{ return HttpContext.Current.Items["NHibernateSession"] as ISession;}
+			set { HttpContext.Current.Items["NHibernateSession"] = value; }
+		}
+
+		public MvcApplication()
+		{
+			BeginRequest += (sender, args) =>
+			{
+				CurrentSession = sessionFactory.OpenSession();
+			};
+			EndRequest += (o, eventArgs) =>
+			{
+				var session = CurrentSession;
+				if (session != null)
+				{
+					session.Dispose();
+				}
+			};
+		}
 
 		public static void RegisterGlobalFilters(GlobalFilterCollection filters)
 		{
