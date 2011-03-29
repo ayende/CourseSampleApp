@@ -9,7 +9,13 @@ namespace CourseSampleApp.Controllers
 		{
 			var blog = Session.Get<Blog>(id);
 
-			return Json(blog, JsonRequestBehavior.AllowGet);
+			return Json(new
+			{
+				blog.AllowsComments,
+				blog.CreatedAt,
+				blog.Id,
+				blog.Subtitle,
+			}, JsonRequestBehavior.AllowGet);
 		}
 	}
 }
