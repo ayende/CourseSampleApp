@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Mvc;
+using CourseSampleApp.Infrastructure;
 using NHibernate;
 
 namespace CourseSampleApp.Controllers
@@ -8,12 +9,9 @@ namespace CourseSampleApp.Controllers
 	{
 		public HttpSessionStateBase HttpSession
 		{
-			get { return base.Session;  }
+			get { return base.Session; }
 		}
 
-		public new ISession Session
-		{
-			get { return MvcApplication.CurrentSession; }
-		}
+		public new ISession Session { get { return NHibernateActionFilter.CurrentSession; } }
 	}
 }

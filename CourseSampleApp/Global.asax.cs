@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using CourseSampleApp.Infrastructure;
 using NHibernate;
 using NHibernate.Cfg;
 
@@ -14,33 +15,10 @@ namespace CourseSampleApp
 
 	public class MvcApplication : System.Web.HttpApplication
 	{
-		private static readonly ISessionFactory sessionFactory = BuildSessionFactory();
-
-		public static ISession CurrentSession
-		{
-			get{ return HttpContext.Current.Items["NHibernateSession"] as ISession;}
-			set { HttpContext.Current.Items["NHibernateSession"] = value; }
-		}
-
-		public MvcApplication()
-		{
-			BeginRequest += (sender, args) =>
-			{
-				CurrentSession = sessionFactory.OpenSession();
-			};
-			EndRequest += (o, eventArgs) =>
-			{
-				var session = CurrentSession;
-				if (session != null)
-				{
-					session.Dispose();
-				}
-			};
-		}
-
 		public static void RegisterGlobalFilters(GlobalFilterCollection filters)
 		{
 			filters.Add(new HandleErrorAttribute());
+			filters.Add(new NHibernateActionFilter());
 		}
 
 		public static void RegisterRoutes(RouteCollection routes)
@@ -61,13 +39,6 @@ namespace CourseSampleApp
 
 			RegisterGlobalFilters(GlobalFilters.Filters);
 			RegisterRoutes(RouteTable.Routes);
-		}
-
-		private static ISessionFactory BuildSessionFactory()
-		{
-			return new Configuration()
-				.Configure()
-				.BuildSessionFactory();
 		}
 	}
 }
