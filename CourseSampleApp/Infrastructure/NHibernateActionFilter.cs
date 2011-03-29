@@ -10,12 +10,6 @@ namespace CourseSampleApp.Infrastructure
 	{
 		private static readonly ISessionFactory sessionFactory = BuildSessionFactory();
 
-		public static ISession CurrentSession
-		{
-			get { return HttpContext.Current.Items["NHibernateSession"] as ISession; }
-			set { HttpContext.Current.Items["NHibernateSession"] = value; }
-		}
-
 		private static ISessionFactory BuildSessionFactory()
 		{
 			return new Configuration()
@@ -25,13 +19,22 @@ namespace CourseSampleApp.Infrastructure
 
 		public override void OnActionExecuting(ActionExecutingContext filterContext)
 		{
-			CurrentSession = sessionFactory.OpenSession();
+			var sessionController = filterContext.Controller as SessionController;
+
+			if (sessionController == null)
+				return;
+
+			sessionController.Session = sessionFactory.OpenSession();
 		}
 
 		public override void OnActionExecuted(ActionExecutedContext filterContext)
 		{
+			var sessionController = filterContext.Controller as SessionController;
 
-			var session = CurrentSession;
+			if (sessionController == null)
+				return;
+			
+			var session = sessionController.Session;
 			if (session != null)
 			{
 				session.Dispose();
