@@ -1,5 +1,6 @@
 using System.Web.Mvc;
 using CourseSampleApp.Models;
+using System.Linq;
 
 namespace CourseSampleApp.Controllers
 {
@@ -15,6 +16,13 @@ namespace CourseSampleApp.Controllers
 				blog.CreatedAt,
 				blog.Id,
 				blog.Subtitle,
+				Users = blog.Users.Select(user => new
+				{
+					user.Id,
+					user.Email,
+					user.Username,
+					user.Bio
+				}).ToArray()
 			}, JsonRequestBehavior.AllowGet);
 		}
 	}
