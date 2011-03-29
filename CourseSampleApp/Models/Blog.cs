@@ -1,4 +1,5 @@
 using System;
+using System.Web.Script.Serialization;
 using Iesi.Collections.Generic;
 
 namespace CourseSampleApp.Models
@@ -15,6 +16,7 @@ namespace CourseSampleApp.Models
 
     	public virtual DateTime CreatedAt { get; set; }
 
+		[ScriptIgnore]
 		public virtual ISet<User> Users { get; set; }
 
     	public Blog()
