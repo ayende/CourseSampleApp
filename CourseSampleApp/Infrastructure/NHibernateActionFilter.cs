@@ -34,16 +34,20 @@ namespace CourseSampleApp.Infrastructure
 
 			if (sessionController == null)
 				return;
-			
-			var session = sessionController.Session;
-			if (session == null) 
-				return;
 
-			if(filterContext.Exception != null)
-				session.Transaction.Rollback();
-			else
-				session.Transaction.Commit();
-			session.Dispose();
+			using (var session = sessionController.Session)
+			{
+				if (session == null)
+					return;
+
+				if (!session.Transaction.IsActive) 
+					return;
+
+				if (filterContext.Exception != null)
+					session.Transaction.Rollback();
+				else
+					session.Transaction.Commit();
+			}
 		}
 	}
 }
