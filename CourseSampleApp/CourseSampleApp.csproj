@@ -38,7 +38,7 @@
     </Reference>
     <Reference Include="HibernatingRhinos.Profiler.Appender, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c4acf6557bae1384, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Work\nhprof\build\HibernatingRhinos.Profiler.Appender.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Work\nhprof\HibernatingRhinos.Profiler.Appender\bin\Debug\HibernatingRhinos.Profiler.Appender.dll</HintPath>
     </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.3.1.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="App_Start\NHibernateProfiler.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MyController.cs" />
     <Compile Include="Controllers\SessionController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
