@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+				   assembly="CourseSampleApp"
+				   namespace="CourseSampleApp.Models">
+	<class name="Library"
+		   table="Libraries">
+    
+		<id name="Id">
+			<generator class="identity"/>
+		</id>
+		<property name="Name"/>
+		<bag name="Members" inverse="true" cascade="all-delete-orphan">
+			<key column="Library"/>
+			<one-to-many class="Member"/>
+		</bag>
+		<bag name="Books" inverse="true" cascade="all-delete-orphan">
+			<key column="Library"/>
+			<one-to-many class="Book"/>
+		</bag>
+	</class>
+
+	<class name="Member"
+		   table="Members">
+
+		<id name="Id">
+			<generator class="identity"/>
+		</id>
+		<property name="Name"/>
+		<many-to-one name="Library"/>
+	</class>
+
+	<class name="Book"
+		   table="Books">
+
+		<id name="Id">
+			<generator class="identity"/>
+		</id>
+		<property name="Name"/>
+		<many-to-one name="Library"/>
+		<bag name="Loans" inverse="true" cascade="all-delete-orphan">
+			<key column="Book"/>
+			<one-to-many class="BookLoan"/>
+		</bag>
+	</class>
+
+	<class name="BookLoan"
+		   table="BookLoans">
+
+		<id name="Id">
+			<generator class="identity"/>
+		</id>
+		<property name="DueDate"  />
+		<property name="LoanDate" />
+		<many-to-one name="Book"  />
+		<many-to-one name="Member"/>
+	</class>
+
+</hibernate-mapping>

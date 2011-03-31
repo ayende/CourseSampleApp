@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="App_Start\NHibernateProfiler.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LibraryController.cs" />
     <Compile Include="Controllers\MyController.cs" />
     <Compile Include="Controllers\SessionController.cs" />
     <Compile Include="Global.asax.cs">
@@ -85,6 +86,10 @@
     </Compile>
     <Compile Include="Infrastructure\NHibernateActionFilter.cs" />
     <Compile Include="Models\Blog.cs" />
+    <Compile Include="Models\Book.cs" />
+    <Compile Include="Models\BookLoan.cs" />
+    <Compile Include="Models\Library.cs" />
+    <Compile Include="Models\Member.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -110,6 +115,7 @@
     </Content>
     <EmbeddedResource Include="Models\Blog.hbm.xml" />
     <EmbeddedResource Include="Models\User.hbm.xml" />
+    <EmbeddedResource Include="Models\Library.hbm.xml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
