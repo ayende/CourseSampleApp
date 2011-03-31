@@ -27,6 +27,27 @@ namespace CourseSampleApp.Controllers
 			return Json(new { Message = "Library deleted, we hate you!"}, JsonRequestBehavior.AllowGet);
 		}
 
+		public ActionResult ShutdownQuickly(int id)
+		{
+			Session.CreateQuery("delete BookLoan bl where bl.Book in (from Book b where b.Library = :libraryId)")
+				.SetParameter("libraryId", id)
+				.ExecuteUpdate();
+
+			Session.CreateQuery("delete Book b where b.Library = :libraryId")
+				.SetParameter("libraryId", id)
+				.ExecuteUpdate();
+
+			Session.CreateQuery("delete CourseSampleApp.Models.Member m where m.Library = :libraryId")
+				.SetParameter("libraryId", id)
+				.ExecuteUpdate();
+
+			Session.CreateQuery("delete Library m where m.Id = :libraryId")
+				.SetParameter("libraryId", id)
+				.ExecuteUpdate();
+
+			return Json(new { Message = "Library deleted, we hate you!" }, JsonRequestBehavior.AllowGet);
+		}
+
 		public ActionResult Join(int id, string memberName)
 		{
 			var member = new Member
