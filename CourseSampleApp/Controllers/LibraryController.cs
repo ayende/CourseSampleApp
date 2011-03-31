@@ -1,8 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using CourseSampleApp.Models;
+using NHibernate.Criterion;
 using NHibernate.Linq;
+using Expression = NHibernate.Criterion.Expression;
 
 namespace CourseSampleApp.Controllers
 {
@@ -15,6 +19,29 @@ namespace CourseSampleApp.Controllers
 			Session.Save(lib);
 
 			return Json(new {LibraryId = lib.Id}, JsonRequestBehavior.AllowGet);
+		}
+
+		public ActionResult Members(int id)
+		{
+			//var q = Session.CreateQuery("select m.Name from Member m where m.Library = :libraryId")
+			//    .SetParameter("libraryId", 1)
+			//    .List();
+
+			//var q = (from member in Session.Query<Member>()
+			//         where member.Library.Id == id
+			//         select member.Name).ToArray();
+
+			var q = Session.CreateCriteria<Member>()
+				.Add(Restrictions.Eq("Library.id", id))
+				.SetProjection(Projections.Property("Name"))
+				.List();
+
+			return Json(new
+			{
+				LibraryId = id,
+				Members = q
+			}, JsonRequestBehavior.AllowGet);
+	
 		}
 
 		public ActionResult Shutdown(int id)
