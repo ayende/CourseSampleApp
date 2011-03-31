@@ -26,6 +26,7 @@ namespace CourseSampleApp.Infrastructure
 
 			sessionController.Session = sessionFactory.OpenSession();
 			sessionController.Session.BeginTransaction();
+
 		}
 
 		public override void OnActionExecuted(ActionExecutedContext filterContext)

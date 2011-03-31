@@ -19,6 +19,7 @@ namespace CourseSampleApp
 		{
 			filters.Add(new HandleErrorAttribute());
 			filters.Add(new NHibernateActionFilter());
+			filters.Add(new CurrentLibrarySessionFilter());
 		}
 
 		public static void RegisterRoutes(RouteCollection routes)

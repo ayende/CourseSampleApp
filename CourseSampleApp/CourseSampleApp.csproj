@@ -84,6 +84,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\CurrentLibrarySessionFilter.cs" />
     <Compile Include="Infrastructure\NHibernateActionFilter.cs" />
     <Compile Include="Models\Blog.cs" />
     <Compile Include="Models\Book.cs" />

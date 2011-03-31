@@ -27,6 +27,7 @@
 		</id>
 		<property name="Name"/>
 		<many-to-one name="Library"/>
+		<filter name="CurrentLibrary"/>
 	</class>
 
 	<class name="Book"
@@ -41,9 +42,10 @@
 			<key column="Book"/>
 			<one-to-many class="BookLoan"/>
 		</bag>
+		<filter name="CurrentLibrary"/>
 	</class>
 
-	<class name="BookLoan"
+	<class name="BookLoan" 
 		   table="BookLoans">
 
 		<id name="Id">
@@ -55,4 +57,7 @@
 		<many-to-one name="Member"/>
 	</class>
 
+	<filter-def name="CurrentLibrary" condition="Library = :libraryId">
+		<filter-param name="libraryId" type="System.Int32"/>
+	</filter-def>
 </hibernate-mapping>

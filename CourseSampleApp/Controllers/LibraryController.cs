@@ -21,6 +21,34 @@ namespace CourseSampleApp.Controllers
 			return Json(new {LibraryId = lib.Id}, JsonRequestBehavior.AllowGet);
 		}
 
+		public ActionResult LendingHistory(int bookId, int start, int pageSize)
+		{
+			var book = Session.Get<Book>(bookId);
+			var bookLoans = Session.CreateFilter(book.Loans, "where this.DueDate < :now")
+				.SetParameter("now", DateTime.Today)
+				.SetMaxResults(pageSize)
+				.SetFirstResult(start)
+				.List()
+				.OfType<BookLoan>();
+
+			return Json(new
+			{
+				book.Name,
+				Lenders = bookLoans.Select(x => x.LoanDate).ToArray()
+			}, JsonRequestBehavior.AllowGet);
+		}
+		
+		public ActionResult Books()
+		{
+			// this is actually filtered!
+			// see CurrentLibrarySessionFilter
+
+			var q = from book in Session.Query<Book>()
+			        select book.Name;
+
+			return Json(new { Books = q.ToArray() }, JsonRequestBehavior.AllowGet);
+		}
+
 		public ActionResult UsersReading(int bookId)
 		{
 			var usersReadingSpecifiedBook = DetachedCriteria.For<BookLoan>()
