@@ -21,6 +21,32 @@ namespace CourseSampleApp.Controllers
 			return Json(new {LibraryId = lib.Id}, JsonRequestBehavior.AllowGet);
 		}
 
+		public ActionResult UsersReading(int bookId)
+		{
+			var usersReadingSpecifiedBook = DetachedCriteria.For<BookLoan>()
+				.Add(Restrictions.Eq("Book.id", bookId))
+				.SetProjection(Projections.Property("Member.id"));
+
+			var q = Session.CreateCriteria<Member>()
+				.Add(Subqueries.PropertyIn("id", usersReadingSpecifiedBook))
+				.SetProjection(Projections.Property("Name"))
+				.List();
+
+			// not good beacuse it forces a join and may result
+			// in duplicate items
+
+			//var q = from loan in Session.Query<BookLoan>()
+			//        where loan.Book.Id == bookId
+			//        select loan.Member.Name;
+
+			return Json(new
+			{
+				Readers = q
+			}, JsonRequestBehavior.AllowGet);
+	
+		
+		}
+
 		public ActionResult Members(int id)
 		{
 			//var q = Session.CreateQuery("select m.Name from Member m where m.Library = :libraryId")
