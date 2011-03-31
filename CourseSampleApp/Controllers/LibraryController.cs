@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -14,11 +15,11 @@ namespace CourseSampleApp.Controllers
 	{
 		public ActionResult New(string name)
 		{
-			var lib = new Library {Name = name};
+			var lib = new Library { Name = name };
 
 			Session.Save(lib);
 
-			return Json(new {LibraryId = lib.Id}, JsonRequestBehavior.AllowGet);
+			return Json(new { LibraryId = lib.Id }, JsonRequestBehavior.AllowGet);
 		}
 
 		public ActionResult LendingHistory(int bookId, int start, int pageSize)
@@ -34,17 +35,17 @@ namespace CourseSampleApp.Controllers
 			return Json(new
 			{
 				book.Name,
-				Lenders = bookLoans.Select(x => x.LoanDate).ToArray()
+				Lenders = bookLoans.Select(x => x.LendingPeriod).ToArray()
 			}, JsonRequestBehavior.AllowGet);
 		}
-		
+
 		public ActionResult Books()
 		{
 			// this is actually filtered!
 			// see CurrentLibrarySessionFilter
 
 			var q = from book in Session.Query<Book>()
-			        select book.Name;
+					select book.Name;
 
 			return Json(new { Books = q.ToArray() }, JsonRequestBehavior.AllowGet);
 		}
@@ -71,8 +72,8 @@ namespace CourseSampleApp.Controllers
 			{
 				Readers = q
 			}, JsonRequestBehavior.AllowGet);
-	
-		
+
+
 		}
 
 		public ActionResult Members(int id)
@@ -95,7 +96,7 @@ namespace CourseSampleApp.Controllers
 				LibraryId = id,
 				Members = q
 			}, JsonRequestBehavior.AllowGet);
-	
+
 		}
 
 		public ActionResult Shutdown(int id)
@@ -105,7 +106,7 @@ namespace CourseSampleApp.Controllers
 			// someone should be made to regret it.
 			Session.Delete(Session.Get<Library>(id));
 
-			return Json(new { Message = "Library deleted, we hate you!"}, JsonRequestBehavior.AllowGet);
+			return Json(new { Message = "Library deleted, we hate you!" }, JsonRequestBehavior.AllowGet);
 		}
 
 		public ActionResult ShutdownQuickly(int id)
@@ -135,11 +136,17 @@ namespace CourseSampleApp.Controllers
 			{
 				Name = memberName,
 				Library = Session.Load<Library>(id),
+				Email = memberName +"@" + memberName + ".com",
+				Attributes = new Hashtable
+				{
+					{"JoinDate", DateTime.Today},
+					{"MembershipType", "Standard"}
+				}
 			};
 			Session.Save(member);
 
 			return Json(new { MemberId = member.Id }, JsonRequestBehavior.AllowGet);
-	
+
 		}
 
 		public ActionResult Acquire(int id, string bookName)
@@ -158,12 +165,15 @@ namespace CourseSampleApp.Controllers
 		{
 			var bookLoan = new BookLoan
 			{
-				DueDate = DateTime.Today.AddDays(7),
-				LoanDate = DateTime.Today,
+				LendingPeriod = new LendingPeriod
+				{
+					DueDate = DateTime.Today.AddDays(7),
+					LoanDate = DateTime.Today
+				},
 				Book = Session.Load<Book>(bookId),
 				Member = Session.Load<Member>(memberId)
 			};
-			
+
 			Session.Save(bookLoan);
 
 			return Json(new { BookLoanId = bookLoan.Id }, JsonRequestBehavior.AllowGet);
@@ -173,8 +183,8 @@ namespace CourseSampleApp.Controllers
 		{
 			var library = Session.Load<Library>(id);
 			var bookLoans = Session.Query<BookLoan>()
-				.Fetch(x=>x.Member)
-				.Fetch(x=>x.Book)
+				.Fetch(x => x.Member)
+				.Fetch(x => x.Book)
 				.Where(bl => bl.Member.Library.Id == id)
 				.ToArray();
 
@@ -194,11 +204,11 @@ namespace CourseSampleApp.Controllers
 				{
 					b.Name,
 					LoanedTo = bookLoans.Where(x => x.Book == b)
-				                                  	.Select(bl => new
-				                                  	{
-				                                  		bl.Member.Name,
-				                                  		bl.LoanDate
-				                                  	})
+													.Select(bl => new
+													{
+														bl.Member.Name,
+														bl.LendingPeriod
+													})
 				}).ToArray(),
 				Members = library.Members.Select(m => new
 				{
@@ -206,7 +216,7 @@ namespace CourseSampleApp.Controllers
 					Read = bookLoans.Where(x => x.Member == m).Select(loan => new
 					{
 						loan.Book.Name,
-						ReadAt = loan.LoanDate
+						ReadAt = loan.LendingPeriod.LoanDate
 					}).ToArray()
 				}).ToArray(),
 			}, JsonRequestBehavior.AllowGet);

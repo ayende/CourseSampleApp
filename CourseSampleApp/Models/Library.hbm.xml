@@ -25,8 +25,22 @@
 		<id name="Id">
 			<generator class="identity"/>
 		</id>
-		<property name="Name"/>
+		<natural-id>
+			<property name="Name"/>
+		</natural-id>
 		<many-to-one name="Library"/>
+
+
+		<dynamic-component name="Attributes">
+			<property name="JoinDate" type="System.DateTime"/>
+			<property name="MembershipType" type="System.String" not-null="true"/>
+		</dynamic-component>
+		
+		<join table="People" fetch="join" optional="true">
+			<key column="Id"/>
+			<property name="Email"/>
+		</join>
+		
 		<filter name="CurrentLibrary"/>
 	</class>
 
@@ -51,8 +65,12 @@
 		<id name="Id">
 			<generator class="identity"/>
 		</id>
-		<property name="DueDate"  />
-		<property name="LoanDate" />
+
+		<component name="LendingPeriod">
+			<property name="DueDate"  />
+			<property name="LoanDate" />
+		</component>
+		
 		<many-to-one name="Book"  />
 		<many-to-one name="Member"/>
 	</class>
