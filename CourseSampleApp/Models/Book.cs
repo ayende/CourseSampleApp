@@ -9,7 +9,7 @@ namespace CourseSampleApp.Models
 		public virtual string Name { get; set; }
 		public virtual Library Library { get; set; }
 		public virtual ICollection<BookLoan> Loans { get; set; }
-
+		public virtual int Version { get; set; }
 		private IDictionary attributes = new Hashtable();
 
 		public virtual dynamic Attributes

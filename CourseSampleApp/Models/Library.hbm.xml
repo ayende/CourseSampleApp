@@ -5,16 +5,18 @@
 	
 	<class name="Library"
 		   table="Libraries">
-    
+		<cache usage="read-write"/>
 		<id name="Id">
 			<generator class="hilo"/>
 		</id>
 		<property name="Name"/>
 		<bag name="Members" inverse="true" cascade="all-delete-orphan">
+			<cache usage="read-write"/>
 			<key column="Library"/>
 			<one-to-many class="Member"/>
 		</bag>
 		<bag name="Books" inverse="true" cascade="all-delete-orphan">
+			<cache usage="read-write"/>
 			<key column="Library"/>
 			<one-to-many class="Book"/>
 		</bag>
@@ -22,7 +24,7 @@
 
 	<class name="Member"
 		   table="Members">
-
+		<cache usage="read-write"/>
 		<id name="Id">
 			<generator class="identity"/>
 		</id>
@@ -47,10 +49,13 @@
 
 	<class name="Book"
 		   table="Books">
-
+		<cache usage="read-write"/>
 		<id name="Id">
 			<generator class="identity"/>
 		</id>
+		<version name="Version">
+			<column name="Version" default="1"/>
+		</version>
 		<property name="Name"/>
 		<many-to-one name="Library"/>
 		<bag name="Loans" inverse="true" cascade="all-delete-orphan">
@@ -83,9 +88,16 @@
 		
 		<many-to-one name="Book"  />
 		<many-to-one name="Member"/>
+		
+		<filter name="OverdueFilter" condition=":now > DueDate"/>
 	</class>
 
 	<filter-def name="CurrentLibrary" condition="Library = :libraryId">
 		<filter-param name="libraryId" type="System.Int32"/>
+	</filter-def>
+
+
+	<filter-def name="OverdueFilter">
+		<filter-param name="now" type="System.DateTime"/>
 	</filter-def>
 </hibernate-mapping>

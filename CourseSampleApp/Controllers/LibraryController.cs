@@ -22,6 +22,16 @@ namespace CourseSampleApp.Controllers
 			return Json(new { LibraryId = lib.Id }, JsonRequestBehavior.AllowGet);
 		}
 
+		public ActionResult Modify(int bookId)
+		{
+			var book = Session.Get<Book>(bookId);
+
+			book.Name = DateTime.Now.ToShortTimeString();
+
+
+			return Json(new { Status = "OK"}, JsonRequestBehavior.AllowGet);
+		}
+
 		public ActionResult CrateLoad(int size)
 		{
 			for (int i = 0; i < size; i++)
@@ -40,11 +50,11 @@ namespace CourseSampleApp.Controllers
 			{
 				Name = name,
 				Library = Session.Load<Library>(id),
-				Attributes =
-					{
-						ISBN = isbn,
-						Grade = grade
-					}
+				//Attributes =
+				//    {
+				//        ISBN = isbn,
+				//        Grade = grade
+				//    }
 			};
 
 			Session.Save(book);
@@ -226,6 +236,7 @@ namespace CourseSampleApp.Controllers
 		{
 			var library = Session.Load<Library>(id);
 			var bookLoans = Session.Query<BookLoan>()
+				.Cacheable()
 				.Fetch(x => x.Member)
 				.Fetch(x => x.Book)
 				.Where(bl => bl.Member.Library.Id == id)
@@ -246,8 +257,6 @@ namespace CourseSampleApp.Controllers
 				Books = library.Books.Select(b => new
 				{
 					b.Name,
-					b.Attributes.ISBN,
-					b.Attributes.Grade,
 					LoanedTo = bookLoans.Where(x => x.Book == b)
 													.Select(bl => new
 													{
