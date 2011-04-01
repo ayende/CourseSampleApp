@@ -22,10 +22,35 @@ namespace CourseSampleApp.Controllers
 			return Json(new { LibraryId = lib.Id }, JsonRequestBehavior.AllowGet);
 		}
 
+		public ActionResult CrateLoad(int size)
+		{
+			for (int i = 0; i < size; i++)
+			{
+				Session.Save(new Library
+				{
+					Name = "Library #" + i
+				});
+			}
+			return Json(new {Status = "Done"}, JsonRequestBehavior.AllowGet);
+		}
+
+		public ActionResult SwitchCase()
+		{
+			foreach (var library in Session.Query<Library>())
+			{
+				if (char.IsUpper(library.Name[0]))
+					library.Name = library.Name.ToLower();
+				else
+					library.Name = library.Name.ToUpper();
+			}
+			
+			return Json(new { Status = "Done" }, JsonRequestBehavior.AllowGet);
+		}
+
 		public ActionResult LendingHistory(int bookId, int start, int pageSize)
 		{
 			var book = Session.Get<Book>(bookId);
-			var bookLoans = Session.CreateFilter(book.Loans, "where this.DueDate < :now")
+			var bookLoans = Session.CreateFilter(book.Loans, "where this.LendingPeriod.DueDate < :now")
 				.SetParameter("now", DateTime.Today)
 				.SetMaxResults(pageSize)
 				.SetFirstResult(start)
