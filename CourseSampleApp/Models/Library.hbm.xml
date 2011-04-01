@@ -57,6 +57,15 @@
 			<key column="Book"/>
 			<one-to-many class="BookLoan"/>
 		</bag>
+
+		<join table="BookExtensions">
+			<key column="BookId"/>
+			<dynamic-component name="Attributes" access="field.lowercase">
+				<property name="ISBN" type="System.String"/>
+				<property name="Grade" type="System.String"/>
+			</dynamic-component>
+		</join>
+		
 		<filter name="CurrentLibrary"/>
 	</class>
 

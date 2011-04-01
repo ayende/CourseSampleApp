@@ -89,6 +89,7 @@
     <Compile Include="Models\Blog.cs" />
     <Compile Include="Models\Book.cs" />
     <Compile Include="Models\BookLoan.cs" />
+    <Compile Include="Models\HashtableDynamicObject.cs" />
     <Compile Include="Models\Library.cs" />
     <Compile Include="Models\Member.cs" />
     <Compile Include="Models\User.cs" />

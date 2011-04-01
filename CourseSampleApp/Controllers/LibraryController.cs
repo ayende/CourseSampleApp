@@ -34,6 +34,24 @@ namespace CourseSampleApp.Controllers
 			return Json(new {Status = "Done"}, JsonRequestBehavior.AllowGet);
 		}
 
+		public ActionResult BookIt(int id, string name, string isbn, string grade)
+		{
+			var book = new Book
+			{
+				Name = name,
+				Library = Session.Load<Library>(id),
+				Attributes =
+					{
+						ISBN = isbn,
+						Grade = grade
+					}
+			};
+
+			Session.Save(book);
+
+			return Json(new { Status = "Done" }, JsonRequestBehavior.AllowGet);
+		}
+
 		public ActionResult SwitchCase()
 		{
 			foreach (var library in Session.Query<Library>())
@@ -228,6 +246,8 @@ namespace CourseSampleApp.Controllers
 				Books = library.Books.Select(b => new
 				{
 					b.Name,
+					b.Attributes.ISBN,
+					b.Attributes.Grade,
 					LoanedTo = bookLoans.Where(x => x.Book == b)
 													.Select(bl => new
 													{
